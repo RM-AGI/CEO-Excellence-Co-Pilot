@@ -1,22 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { Brain, Users, Compass, ArrowRight, Sparkles, ShieldCheck, TrendingUp, Award } from 'lucide-react';
-import { motion } from 'motion/react';
-import { generateImage } from '../lib/nexus';
-
-interface DashboardProps {
-  onSelectModule: (module: string) => void;
-  language: 'en' | 'zh';
-}
-
 const ADVISOR_PROMPTS: Record<string, string> = {
+  // Visionaries
   "steve-jobs": "Close-up portrait of Steve Jobs, black turtleneck, rimless round glasses, intense and visionary gaze, hand on chin, dramatic lighting, black background, photorealistic, 8k",
-  "peter-drucker": "Portrait of Peter Drucker, the father of modern management, elderly, intellectual, wearing a suit and glasses, expression of deep wisdom and foresight, library background, photorealistic",
-  "andy-grove": "Portrait of Andy Grove, intense and paranoid gaze, 1980s Intel era, curly hair, wearing a headset or business shirt, atmosphere of high-stakes leadership, photorealistic",
-  "clayton-christensen": "Portrait of Clayton Christensen, tall, gentle giant, suit and red tie, glasses, expression of kindness and deep intellect, academic setting, photorealistic",
-  "daniel-kahneman": "Portrait of Daniel Kahneman, elderly, kind eyes, glasses, expression of curiosity and deep thought about human nature, soft lighting, photorealistic",
-  "amy-edmondson": "Portrait of Amy Edmondson, professional, confident, approachable, blonde hair, business attire, symbolizing psychological safety and fearlessness, bright office background, photorealistic",
+  "naval-ravikant": "Portrait of Naval Ravikant, Indian-American entrepreneur, thoughtful expression, casual t-shirt, wise and calm demeanor, podcast studio setting, photorealistic",
+  "larry-page": "Portrait of Larry Page, Google founder, grey hair, intense intellect, looking at the horizon, tech visionary style, photorealistic",
+  
+  // Guardians
+  "st-augustine": "Portrait of St. Augustine of Hippo, late Roman era philosopher, bearded, holding a book, expression of spiritual intensity and patience, dramatic chiaroscuro lighting, photorealistic art style",
+  "thomas-aquinas": "Portrait of Thomas Aquinas, medieval theologian, dominican habit, holding a quill, expression of deep reason and faith, library background, photorealistic",
+  "carl-jung": "Portrait of Carl Jung, elderly psychoanalyst, round glasses, white hair, expression of deep wisdom and mystery, study background, photorealistic",
   "marcus-aurelius": "Marble bust come to life of Marcus Aurelius, Roman Emperor, stoic beard, weary but strong eyes, wearing imperial robes, cinematic lighting, ancient Rome background, photorealistic",
-  "st-augustine": "Portrait of St. Augustine of Hippo, late Roman era philosopher, bearded, holding a book, expression of spiritual intensity and patience, dramatic chiaroscuro lighting, photorealistic art style"
+  "cs-lewis": "Portrait of C.S. Lewis, British scholar, 1950s style, holding a pipe, tweed jacket, expression of imagination and warmth, oxford study background, photorealistic",
+  
+  // Realists
+  "deng-xiaoping": "Portrait of Deng Xiaoping, Chinese leader, elderly, short hair, grey mao suit, expression of pragmatic determination, kind but firm eyes, photorealistic",
+  "du-yuesheng": "Portrait of Du Yuesheng, 1930s Shanghai tycoon, traditional Chinese changshan robe, sharp eyes, expression of street wisdom and cunning, vintage shanghai background, photorealistic",
+  "mao-zedong": "Portrait of Mao Zedong, Chinese leader, charismatic gaze, grey suit, expression of strategic confidence, historical setting, photorealistic",
+  "sun-tzu": "Portrait of Sun Tzu, ancient Chinese general, armor, holding a bamboo scroll, expression of strategic depth, ancient battlefield background, photorealistic",
+  
+  // Evolutionists
+  "ray-dalio": "Portrait of Ray Dalio, hedge fund manager, grey hair, business casual, expression of systematic thinking, office background, photorealistic",
+  "james-clear": "Portrait of James Clear, author, athletic build, clean cut, t-shirt, expression of focus and clarity, modern minimalist background, photorealistic",
+  "david-goggins": "Portrait of David Goggins, Navy SEAL, shaved head, intense sweating, expression of extreme pain and determination, gym or outdoor running background, photorealistic"
 };
 
 export function Dashboard({ onSelectModule, language }: DashboardProps) {
@@ -24,7 +28,6 @@ export function Dashboard({ onSelectModule, language }: DashboardProps) {
 
   useEffect(() => {
     const loadImages = async () => {
-      // Check if we already have images to avoid re-generating on every render/language switch
       if (Object.keys(advisorImages).length > 0) return;
 
       const promises = Object.entries(ADVISOR_PROMPTS).map(async ([id, prompt]) => {
@@ -63,75 +66,47 @@ export function Dashboard({ onSelectModule, language }: DashboardProps) {
       subtitle: "The operating system for high-growth leadership. Rigorous. Practical. Execution-focused.",
       selfTitle: "Self-Mastery",
       selfDesc: "The Mirror. Executive presence, energy management, and decision-making clarity.",
-      selfAction: "Enter Module",
+      selfAction: "Explore Module",
       teamTitle: "Team Synergy",
       teamDesc: "The Bridge. High-performance culture, radical candor, and organizational alignment.",
-      teamAction: "Enter Module",
+      teamAction: "Explore Module",
       stratTitle: "Strategic Wisdom",
       stratDesc: "The Compass. Competitive strategy, OKRs, and MECE problem-solving.",
-      stratAction: "Enter Module",
+      stratAction: "Explore Module",
       toolTitle: "Toolkit",
       toolDesc: "Access proven frameworks, mental models, and tactical playbooks.",
-      toolAction: "Open Toolkit",
-      advisoryTitle: "Advisory Board (Representative Figures)",
-      advisoryDesc: "The AI models are trained on the wisdom of these iconic leaders and thinkers (Examples).",
+      toolAction: "Access Toolkit",
+      advisoryTitle: "The Council of Advisors",
+      advisoryDesc: "Your personal board of directors, curated for every dimension of leadership.",
+      groups: {
+        visionaries: "The Visionaries (Vision & First Principles)",
+        guardians: "The Guardians of Soul (Faith, Psychology & Integration)",
+        realists: "The Realists (Strategy, Pragmatism & Game Theory)",
+        evolutionists: "The Evolutionists (Evolution, Discipline & Execution)"
+      },
       advisors: [
-        { 
-          id: "steve-jobs",
-          name: "Steve Jobs", 
-          role: "Founder, Apple", 
-          quote: "Stay hungry, stay foolish.",
-          avatar: "SJ"
-        },
-        { 
-          id: "peter-drucker",
-          name: "Peter Drucker", 
-          role: "Father of Modern Management", 
-          quote: "The best way to predict the future is to create it.",
-          avatar: "PD"
-        },
-        { 
-          id: "andy-grove",
-          name: "Andy Grove", 
-          role: "Former CEO, Intel", 
-          quote: "Only the paranoid survive.",
-          avatar: "AG"
-        },
-        { 
-          id: "clayton-christensen",
-          name: "Clayton Christensen", 
-          role: "Author, The Innovator's Dilemma", 
-          quote: "Disruption often comes from the low end.",
-          avatar: "CC"
-        },
-        { 
-          id: "daniel-kahneman",
-          name: "Daniel Kahneman", 
-          role: "Nobel Laureate, Psychologist", 
-          quote: "We are prone to overestimate how much we understand.",
-          avatar: "DK"
-        },
-        { 
-          id: "amy-edmondson",
-          name: "Amy Edmondson", 
-          role: "Professor, Harvard Business School", 
-          quote: "Psychological safety is the soil of innovation.",
-          avatar: "AE"
-        },
-        { 
-          id: "marcus-aurelius",
-          name: "Marcus Aurelius", 
-          role: "Roman Emperor", 
-          quote: "Waste no more time arguing about what a good man should be. Be one.",
-          avatar: "MA"
-        },
-        { 
-          id: "st-augustine",
-          name: "St. Augustine", 
-          role: "Theologian & Philosopher", 
-          quote: "Patience is the companion of wisdom.",
-          avatar: "SA"
-        },
+        // Visionaries
+        { id: "steve-jobs", group: "visionaries", name: "Steve Jobs", role: "Chief Aesthetic Officer", quote: "Stay hungry, stay foolish.", avatar: "SJ" },
+        { id: "naval-ravikant", group: "visionaries", name: "Naval Ravikant", role: "Leveraged Philosopher", quote: "Earn with your mind, not your time.", avatar: "NR" },
+        { id: "larry-page", group: "visionaries", name: "Larry Page", role: "10x Evangelist", quote: "Have a healthy disregard for the impossible.", avatar: "LP" },
+        
+        // Guardians
+        { id: "st-augustine", group: "guardians", name: "St. Augustine", role: "Spiritual Navigator", quote: "Our hearts are restless, until they can find rest in you.", avatar: "SA" },
+        { id: "thomas-aquinas", group: "guardians", name: "Thomas Aquinas", role: "Rational Theologian", quote: "To one who has faith, no explanation is necessary.", avatar: "TA" },
+        { id: "carl-jung", group: "guardians", name: "Carl Jung", role: "Master of Integration", quote: "Until you make the unconscious conscious, it will direct your life.", avatar: "CJ" },
+        { id: "marcus-aurelius", group: "guardians", name: "Marcus Aurelius", role: "Stoic Emperor", quote: "You have power over your mind - not outside events.", avatar: "MA" },
+        { id: "cs-lewis", group: "guardians", name: "C.S. Lewis", role: "Narrative Apologist", quote: "Integrity is doing the right thing, even when no one is watching.", avatar: "CL" },
+
+        // Realists
+        { id: "deng-xiaoping", group: "realists", name: "Deng Xiaoping", role: "Pragmatist", quote: "Hide your strength, bide your time.", avatar: "DX" },
+        { id: "du-yuesheng", group: "realists", name: "Du Yuesheng", role: "Street Wisdom", quote: "There are three bowls of noodles to eat in life: Face, Favor, and Fate.", avatar: "DY" },
+        { id: "mao-zedong", group: "realists", name: "Mao Zedong", role: "Master of Contradiction", quote: "Everything under heaven is in utter chaos; the situation is excellent.", avatar: "MZ" },
+        { id: "sun-tzu", group: "realists", name: "Sun Tzu", role: "Strategist", quote: "The supreme art of war is to subdue the enemy without fighting.", avatar: "ST" },
+
+        // Evolutionists
+        { id: "ray-dalio", group: "evolutionists", name: "Ray Dalio", role: "System Builder", quote: "Pain + Reflection = Progress.", avatar: "RD" },
+        { id: "james-clear", group: "evolutionists", name: "James Clear", role: "Micro-Habit Expert", quote: "You do not rise to the level of your goals. You fall to the level of your systems.", avatar: "JC" },
+        { id: "david-goggins", group: "evolutionists", name: "David Goggins", role: "Mind Callousor", quote: "Who's gonna carry the boats?", avatar: "DG" },
       ]
     },
     zh: {
@@ -149,231 +124,193 @@ export function Dashboard({ onSelectModule, language }: DashboardProps) {
       toolTitle: "工具箱",
       toolDesc: "获取经过验证的框架、思维模型和战术手册。",
       toolAction: "打开工具箱",
-      advisoryTitle: "顾问委员会 (代表人物)",
-      advisoryDesc: "我们的AI模型汲取了这些标志性领袖和思想家的智慧（举例）。",
+      advisoryTitle: "顾问委员会 (The Council)",
+      advisoryDesc: "你的私人董事会，涵盖领导力的每一个维度。",
+      groups: {
+        visionaries: "愿景与第一性原理 (The Visionaries)",
+        guardians: "信仰、心理与整合 (The Guardians of Soul)",
+        realists: "战略、务实与博弈 (The Realists)",
+        evolutionists: "进化、纪律与执行 (The Evolutionists)"
+      },
       advisors: [
-        { 
-          id: "steve-jobs",
-          name: "史蒂夫·乔布斯", 
-          role: "苹果公司创始人", 
-          quote: "求知若饥，虚心若愚。",
-          avatar: "乔"
-        },
-        { 
-          id: "peter-drucker",
-          name: "彼得·德鲁克", 
-          role: "现代管理学之父", 
-          quote: "预测未来最好的方式就是去创造它。",
-          avatar: "德"
-        },
-        { 
-          id: "andy-grove",
-          name: "安迪·格鲁夫", 
-          role: "英特尔前CEO", 
-          quote: "只有偏执狂才能生存。",
-          avatar: "安"
-        },
-        { 
-          id: "clayton-christensen",
-          name: "克莱顿·克里斯坦森", 
-          role: "《创新者的窘境》作者", 
-          quote: "颠覆性创新往往始于边缘。",
-          avatar: "克"
-        },
-        { 
-          id: "daniel-kahneman",
-          name: "丹尼尔·卡尼曼", 
-          role: "诺贝尔奖得主，心理学家", 
-          quote: "我们对他人的直觉往往胜过对自己的了解。",
-          avatar: "卡"
-        },
-        { 
-          id: "amy-edmondson",
-          name: "艾米·埃德蒙森", 
-          role: "哈佛商学院教授", 
-          quote: "心理安全感是创新的土壤。",
-          avatar: "艾"
-        },
-        { 
-          id: "marcus-aurelius",
-          name: "马可·奥勒留", 
-          role: "罗马皇帝", 
-          quote: "不要争论好人应该是什么样，去成为一个好人。",
-          avatar: "奥"
-        },
-        { 
-          id: "st-augustine",
-          name: "奥古斯丁", 
-          role: "神学家与哲学家", 
-          quote: "耐心是智慧的伴侣。",
-          avatar: "圣"
-        },
+        // Visionaries
+        { id: "steve-jobs", group: "visionaries", name: "史蒂夫·乔布斯", role: "首席审美官", quote: "求知若饥，虚心若愚。", avatar: "乔" },
+        { id: "naval-ravikant", group: "visionaries", name: "纳瓦尔", role: "杠杆哲学家", quote: "用头脑赚钱，而不是用时间。", avatar: "纳" },
+        { id: "larry-page", group: "visionaries", name: "拉里·佩奇", role: "10x 布道者", quote: "对不可能之事保持健康的漠视。", avatar: "佩" },
+        
+        // Guardians
+        { id: "st-augustine", group: "guardians", name: "奥古斯丁", role: "精神导航员", quote: "我们的心是不安的，直到在您那里找到安息。", avatar: "圣" },
+        { id: "thomas-aquinas", group: "guardians", name: "托马斯·阿奎那", role: "理性神学家", quote: "对于有信仰的人，无需解释。", avatar: "托" },
+        { id: "carl-jung", group: "guardians", name: "荣格", role: "人格整合大师", quote: "除非你将潜意识意识化，否则它将主导你的命运。", avatar: "荣" },
+        { id: "marcus-aurelius", group: "guardians", name: "马可·奥勒留", role: "斯多葛导师", quote: "不要争论好人应该是什么样，去成为一个好人。", avatar: "奥" },
+        { id: "cs-lewis", group: "guardians", name: "C.S.路易斯", role: "叙事护教家", quote: "正直就是在没人看的时候做正确的事。", avatar: "路" },
+
+        // Realists
+        { id: "deng-xiaoping", group: "realists", name: "邓小平", role: "实用主义总设计师", quote: "韬光养晦，有所作为。", avatar: "邓" },
+        { id: "du-yuesheng", group: "realists", name: "杜月笙", role: "江湖智慧大师", quote: "人生要吃三碗面：体面、场面、情面。", avatar: "杜" },
+        { id: "mao-zedong", group: "realists", name: "毛泽东", role: "矛盾论大师", quote: "天下大乱，形势大好。", avatar: "毛" },
+        { id: "sun-tzu", group: "realists", name: "孙子", role: "势能战略家", quote: "不战而屈人之兵，善之善者也。", avatar: "孙" },
+
+        // Evolutionists
+        { id: "ray-dalio", group: "evolutionists", name: "雷·达里奥", role: "系统构建者", quote: "痛苦 + 反思 = 进步。", avatar: "雷" },
+        { id: "james-clear", group: "evolutionists", name: "詹姆斯·克利尔", role: "微观习惯专家", quote: "你不会上升到你目标的高度，你会跌落到你系统的高度。", avatar: "詹" },
+        { id: "david-goggins", group: "evolutionists", name: "大卫·戈金斯", role: "精神磨炼者", quote: "谁来扛船？", avatar: "戈" },
       ]
     }
   };
 
   const text = t[language];
+  const groups = ['visionaries', 'guardians', 'realists', 'evolutionists'] as const;
 
   return (
-    <div className="space-y-16">
-      {/* Hero Section */}
-      <section className="text-center py-12 md:py-20 relative overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-500/10 rounded-full blur-3xl -z-10" />
-        
-        <motion.h1 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="text-4xl md:text-6xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white via-zinc-200 to-zinc-400"
-        >
-          {text.title}
-        </motion.h1>
-        
-        <motion.p 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
-          className="text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto leading-relaxed"
-        >
-          {text.subtitle}
-        </motion.p>
+    <div className="bg-white">
+      {/* Hero Section - McKinsey Style Navy Background */}
+      <section className="bg-mckinsey-navy text-white py-20 md:py-32 px-6 md:px-12 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
+            <h1 className="text-5xl md:text-7xl font-serif font-bold tracking-tight mb-8 leading-tight">
+              {text.title}
+            </h1>
+            <div className="w-24 h-1 bg-mckinsey-blue mb-8" />
+            <p className="text-xl md:text-2xl text-zinc-300 max-w-3xl font-light leading-relaxed">
+              {text.subtitle}
+            </p>
+          </motion.div>
+        </div>
+        {/* Subtle background pattern */}
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-white/5 to-transparent pointer-events-none" />
       </section>
 
-      {/* Modules Grid */}
-      <motion.div 
-        variants={container}
-        initial="hidden"
-        animate="show"
-        className="grid grid-cols-1 md:grid-cols-2 gap-6"
-      >
-        {/* Self-Mastery */}
+      <div className="max-w-7xl mx-auto px-6 md:px-12 -mt-16 relative z-20 pb-20">
+        {/* Modules Grid */}
         <motion.div 
-          variants={item}
-          onClick={() => onSelectModule('self')}
-          className="group relative bg-zinc-900/50 border border-zinc-800 hover:border-indigo-500/50 rounded-2xl p-8 cursor-pointer transition-all duration-300 hover:shadow-2xl hover:shadow-indigo-500/10 hover:-translate-y-1 overflow-hidden"
+          variants={container}
+          initial="hidden"
+          animate="show"
+          className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-24"
         >
-          <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
-            <Brain className="w-24 h-24 text-indigo-500" />
-          </div>
-          <div className="relative z-10">
-            <div className="w-12 h-12 rounded-xl bg-indigo-500/20 flex items-center justify-center mb-6 text-indigo-400 group-hover:text-indigo-300 group-hover:bg-indigo-500/30 transition-colors">
-              <Brain className="w-6 h-6" />
+          {/* Self-Mastery */}
+          <motion.div 
+            variants={item}
+            onClick={() => onSelectModule('self')}
+            className="group bg-white p-10 shadow-lg hover:shadow-xl transition-all duration-300 border-t-4 border-mckinsey-navy cursor-pointer flex flex-col h-full"
+          >
+            <div className="mb-6 text-mckinsey-blue">
+              <Brain className="w-10 h-10" strokeWidth={1.5} />
             </div>
-            <h3 className="text-2xl font-semibold mb-3 text-white">{text.selfTitle}</h3>
-            <p className="text-zinc-400 mb-6 leading-relaxed">
+            <h3 className="text-3xl font-serif font-bold mb-4 text-mckinsey-navy group-hover:text-mckinsey-blue transition-colors">{text.selfTitle}</h3>
+            <p className="text-zinc-600 mb-8 leading-relaxed text-lg flex-grow">
               {text.selfDesc}
             </p>
-            <div className="flex items-center text-indigo-400 font-medium group-hover:translate-x-1 transition-transform">
+            <div className="flex items-center text-mckinsey-blue font-semibold tracking-wide uppercase text-sm group-hover:translate-x-2 transition-transform">
               {text.selfAction} <ArrowRight className="w-4 h-4 ml-2" />
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
 
-        {/* Team Synergy */}
-        <motion.div 
-          variants={item}
-          onClick={() => onSelectModule('team')}
-          className="group relative bg-zinc-900/50 border border-zinc-800 hover:border-violet-500/50 rounded-2xl p-8 cursor-pointer transition-all duration-300 hover:shadow-2xl hover:shadow-violet-500/10 hover:-translate-y-1 overflow-hidden"
-        >
-          <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
-            <Users className="w-24 h-24 text-violet-500" />
-          </div>
-          <div className="relative z-10">
-            <div className="w-12 h-12 rounded-xl bg-violet-500/20 flex items-center justify-center mb-6 text-violet-400 group-hover:text-violet-300 group-hover:bg-violet-500/30 transition-colors">
-              <Users className="w-6 h-6" />
+          {/* Team Synergy */}
+          <motion.div 
+            variants={item}
+            onClick={() => onSelectModule('team')}
+            className="group bg-white p-10 shadow-lg hover:shadow-xl transition-all duration-300 border-t-4 border-mckinsey-blue cursor-pointer flex flex-col h-full"
+          >
+            <div className="mb-6 text-mckinsey-blue">
+              <Users className="w-10 h-10" strokeWidth={1.5} />
             </div>
-            <h3 className="text-2xl font-semibold mb-3 text-white">{text.teamTitle}</h3>
-            <p className="text-zinc-400 mb-6 leading-relaxed">
+            <h3 className="text-3xl font-serif font-bold mb-4 text-mckinsey-navy group-hover:text-mckinsey-blue transition-colors">{text.teamTitle}</h3>
+            <p className="text-zinc-600 mb-8 leading-relaxed text-lg flex-grow">
               {text.teamDesc}
             </p>
-            <div className="flex items-center text-violet-400 font-medium group-hover:translate-x-1 transition-transform">
+            <div className="flex items-center text-mckinsey-blue font-semibold tracking-wide uppercase text-sm group-hover:translate-x-2 transition-transform">
               {text.teamAction} <ArrowRight className="w-4 h-4 ml-2" />
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
 
-        {/* Strategic Wisdom */}
-        <motion.div 
-          variants={item}
-          onClick={() => onSelectModule('strategy')}
-          className="group relative bg-zinc-900/50 border border-zinc-800 hover:border-emerald-500/50 rounded-2xl p-8 cursor-pointer transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-500/10 hover:-translate-y-1 overflow-hidden"
-        >
-          <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
-            <Compass className="w-24 h-24 text-emerald-500" />
-          </div>
-          <div className="relative z-10">
-            <div className="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center mb-6 text-emerald-400 group-hover:text-emerald-300 group-hover:bg-emerald-500/30 transition-colors">
-              <Compass className="w-6 h-6" />
+          {/* Strategic Wisdom */}
+          <motion.div 
+            variants={item}
+            onClick={() => onSelectModule('strategy')}
+            className="group bg-white p-10 shadow-lg hover:shadow-xl transition-all duration-300 border-t-4 border-zinc-400 cursor-pointer flex flex-col h-full"
+          >
+            <div className="mb-6 text-mckinsey-blue">
+              <Compass className="w-10 h-10" strokeWidth={1.5} />
             </div>
-            <h3 className="text-2xl font-semibold mb-3 text-white">{text.stratTitle}</h3>
-            <p className="text-zinc-400 mb-6 leading-relaxed">
+            <h3 className="text-3xl font-serif font-bold mb-4 text-mckinsey-navy group-hover:text-mckinsey-blue transition-colors">{text.stratTitle}</h3>
+            <p className="text-zinc-600 mb-8 leading-relaxed text-lg flex-grow">
               {text.stratDesc}
             </p>
-            <div className="flex items-center text-emerald-400 font-medium group-hover:translate-x-1 transition-transform">
+            <div className="flex items-center text-mckinsey-blue font-semibold tracking-wide uppercase text-sm group-hover:translate-x-2 transition-transform">
               {text.stratAction} <ArrowRight className="w-4 h-4 ml-2" />
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
 
-        {/* Toolkit */}
-        <motion.div 
-          variants={item}
-          onClick={() => onSelectModule('toolkit')}
-          className="group relative bg-zinc-900/50 border border-zinc-800 hover:border-amber-500/50 rounded-2xl p-8 cursor-pointer transition-all duration-300 hover:shadow-2xl hover:shadow-amber-500/10 hover:-translate-y-1 overflow-hidden"
-        >
-          <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
-            <Sparkles className="w-24 h-24 text-amber-500" />
-          </div>
-          <div className="relative z-10">
-            <div className="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center mb-6 text-amber-400 group-hover:text-amber-300 group-hover:bg-amber-500/30 transition-colors">
-              <Sparkles className="w-6 h-6" />
+          {/* Toolkit */}
+          <motion.div 
+            variants={item}
+            onClick={() => onSelectModule('toolkit')}
+            className="group bg-white p-10 shadow-lg hover:shadow-xl transition-all duration-300 border-t-4 border-zinc-800 cursor-pointer flex flex-col h-full"
+          >
+            <div className="mb-6 text-mckinsey-blue">
+              <Sparkles className="w-10 h-10" strokeWidth={1.5} />
             </div>
-            <h3 className="text-2xl font-semibold mb-3 text-white">{text.toolTitle}</h3>
-            <p className="text-zinc-400 mb-6 leading-relaxed">
+            <h3 className="text-3xl font-serif font-bold mb-4 text-mckinsey-navy group-hover:text-mckinsey-blue transition-colors">{text.toolTitle}</h3>
+            <p className="text-zinc-600 mb-8 leading-relaxed text-lg flex-grow">
               {text.toolDesc}
             </p>
-            <div className="flex items-center text-amber-400 font-medium group-hover:translate-x-1 transition-transform">
+            <div className="flex items-center text-mckinsey-blue font-semibold tracking-wide uppercase text-sm group-hover:translate-x-2 transition-transform">
               {text.toolAction} <ArrowRight className="w-4 h-4 ml-2" />
             </div>
-          </div>
+          </motion.div>
         </motion.div>
-      </motion.div>
 
-      {/* Advisory Board Section */}
-      <motion.section 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8 }}
-        className="pt-12 border-t border-zinc-800"
-      >
-        <div className="text-center mb-10">
-          <h2 className="text-2xl font-bold text-white mb-2">{text.advisoryTitle}</h2>
-          <p className="text-zinc-400">{text.advisoryDesc}</p>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {text.advisors.map((advisor, idx) => (
-            <div key={idx} className="bg-zinc-900/30 border border-zinc-800/50 rounded-xl p-4 flex items-start gap-4 hover:bg-zinc-900/50 transition-colors">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500/20 to-violet-500/20 border border-indigo-500/30 flex items-center justify-center shrink-0 overflow-hidden relative">
-                {advisorImages[advisor.id] ? (
-                   <img src={advisorImages[advisor.id]} alt={advisor.name} className="w-full h-full object-cover" />
-                ) : (
-                   <span className="text-indigo-300 font-bold text-sm">{advisor.avatar}</span>
-                )}
-              </div>
-              <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <h3 className="text-white font-semibold">{advisor.name}</h3>
-                  <span className="text-zinc-600 text-xs">•</span>
-                  <span className="text-indigo-400 text-xs font-medium uppercase tracking-wider">{advisor.role}</span>
+        {/* Advisory Board Section */}
+        <motion.section 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="pt-16 border-t border-zinc-200"
+        >
+          <div className="mb-12">
+            <h2 className="text-4xl font-serif font-bold text-mckinsey-navy mb-4">{text.advisoryTitle}</h2>
+            <div className="w-16 h-1 bg-mckinsey-blue mb-6" />
+            <p className="text-xl text-zinc-600 font-light max-w-2xl">{text.advisoryDesc}</p>
+          </div>
+          
+          <div className="space-y-12">
+            {groups.map((groupKey) => (
+              <div key={groupKey}>
+                <h3 className="text-2xl font-serif font-bold text-mckinsey-navy mb-6 border-b border-zinc-100 pb-2">
+                  {text.groups[groupKey]}
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {text.advisors.filter(a => a.group === groupKey).map((advisor, idx) => (
+                    <div key={advisor.id} className="bg-zinc-50 p-6 flex items-start gap-5 hover:bg-white hover:shadow-md transition-all duration-300 border border-zinc-100 rounded-sm">
+                      <div className="w-16 h-16 rounded-full bg-zinc-200 flex items-center justify-center shrink-0 overflow-hidden relative shadow-inner">
+                        {advisorImages[advisor.id] ? (
+                           <img src={advisorImages[advisor.id]} alt={advisor.name} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" />
+                        ) : (
+                           <span className="text-mckinsey-navy font-serif font-bold text-lg">{advisor.avatar}</span>
+                        )}
+                      </div>
+                      <div>
+                        <div className="mb-1">
+                          <h4 className="text-mckinsey-navy font-serif font-bold text-lg leading-tight">{advisor.name}</h4>
+                          <span className="text-mckinsey-blue text-[10px] font-bold uppercase tracking-widest">{advisor.role}</span>
+                        </div>
+                        <p className="text-zinc-600 text-sm italic font-serif leading-relaxed">"{advisor.quote}"</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <p className="text-zinc-400 text-sm italic leading-relaxed">"{advisor.quote}"</p>
               </div>
-            </div>
-          ))}
-        </div>
-      </motion.section>
+            ))}
+          </div>
+        </motion.section>
+      </div>
     </div>
   );
 }

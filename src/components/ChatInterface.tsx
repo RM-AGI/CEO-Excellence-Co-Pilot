@@ -93,26 +93,20 @@ export function ChatInterface({ module, onNavigate, language }: ChatInterfacePro
       });
       
       // Trigger image generation immediately for the second message
-      // We need to simulate the effect of the user receiving this message with the tag
-      // But since we are setting state directly, we need to handle the image generation side effect
-      // We'll do this by setting a flag or calling generateImage directly
+      if (quoteText && imagePrompt) {
+        generateImage(imagePrompt).then(url => {
+          if (url) {
+            setMessages(prev => prev.map(m => 
+              m.id === 'quote-img' 
+                ? { ...m, image: url, text: quoteText } // Remove tag from text, add image
+                : m
+            ));
+          }
+        });
+      }
     }
 
     setMessages(initialMessages);
-
-    // Trigger image generation for the initial load if applicable
-    if (quoteText && imagePrompt) {
-      generateImage(imagePrompt).then(url => {
-        if (url) {
-          setMessages(prev => prev.map(m => 
-            m.id === 'quote-img' 
-              ? { ...m, image: url, text: quoteText } // Remove tag from text, add image
-              : m
-          ));
-        }
-      });
-    }
-
   }, [module, language]);
 
   useEffect(() => {
@@ -217,9 +211,9 @@ export function ChatInterface({ module, onNavigate, language }: ChatInterfacePro
   const placeholder = placeholders[module as keyof typeof placeholders]?.[language] || placeholders.dashboard[language];
 
   return (
-    <div className="flex flex-col h-[calc(100vh-8rem)] max-w-4xl mx-auto">
+    <div className="flex flex-col h-[calc(100vh-8rem)] max-w-4xl mx-auto bg-white">
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto pr-2 space-y-6 scrollbar-thin scrollbar-thumb-zinc-800 scrollbar-track-transparent">
+      <div className="flex-1 overflow-y-auto pr-4 pl-4 space-y-8 scrollbar-thin scrollbar-thumb-zinc-200 scrollbar-track-transparent py-6">
         <AnimatePresence initial={false}>
           {messages.map((msg) => (
             <motion.div
@@ -227,36 +221,38 @@ export function ChatInterface({ module, onNavigate, language }: ChatInterfacePro
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               className={cn(
-                "flex gap-4 p-4 rounded-xl",
-                msg.role === 'user' ? "bg-zinc-900/50 border border-zinc-800 ml-12" : "bg-transparent mr-4"
+                "flex gap-6 p-6 rounded-sm",
+                msg.role === 'user' ? "bg-zinc-50 border border-zinc-100 ml-12" : "bg-white mr-4"
               )}
             >
               <div className={cn(
-                "w-8 h-8 rounded-lg flex-shrink-0 flex items-center justify-center",
-                msg.role === 'user' ? "bg-zinc-800 text-zinc-400" : "bg-indigo-500/20 text-indigo-400"
+                "w-10 h-10 flex-shrink-0 flex items-center justify-center shadow-sm",
+                msg.role === 'user' ? "bg-zinc-200 text-zinc-600" : "bg-mckinsey-navy text-white"
               )}>
-                {msg.role === 'user' ? <div className="w-4 h-4 rounded-full bg-zinc-500" /> : <Sparkles className="w-4 h-4" />}
+                {msg.role === 'user' ? <div className="w-4 h-4 rounded-full bg-zinc-500" /> : <span className="font-serif font-bold">N</span>}
               </div>
               
               <div className="flex-1 min-w-0 overflow-hidden">
-                <div className="text-sm font-medium text-zinc-500 mb-1">
+                <div className="text-xs font-bold uppercase tracking-widest text-zinc-400 mb-2 font-sans">
                   {msg.role === 'user' ? (language === 'zh' ? '你' : 'You') : 'NEXUS'}
                 </div>
-                <MarkdownRenderer content={msg.text} />
+                <div className="prose prose-zinc max-w-none prose-p:font-serif prose-headings:font-serif prose-headings:text-mckinsey-navy prose-strong:text-mckinsey-navy">
+                  <MarkdownRenderer content={msg.text} className="text-zinc-800" />
+                </div>
                 
                 {/* Image Rendering */}
                 {msg.isGeneratingImage && (
-                  <div className="mt-4 p-4 rounded-lg bg-zinc-900/50 border border-zinc-800 flex items-center gap-3 text-zinc-400 animate-pulse">
-                    <ImageIcon className="w-5 h-5" />
-                    <span className="text-sm">{language === 'zh' ? '正在生成可视化...' : 'Visualizing concept...'}</span>
+                  <div className="mt-6 p-6 bg-zinc-50 border border-zinc-100 flex items-center gap-4 text-zinc-500 animate-pulse">
+                    <ImageIcon className="w-6 h-6" />
+                    <span className="text-sm font-serif italic">{language === 'zh' ? '正在生成可视化...' : 'Visualizing concept...'}</span>
                   </div>
                 )}
                 
                 {msg.image && (
                   <motion.div 
-                    initial={{ opacity: 0, scale: 0.95 }}
+                    initial={{ opacity: 0, scale: 0.98 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="mt-4 rounded-lg overflow-hidden border border-zinc-800 shadow-xl"
+                    className="mt-6 overflow-hidden border border-zinc-200 shadow-lg"
                   >
                     <img src={msg.image} alt="Generated visualization" className="w-full h-auto" />
                   </motion.div>
@@ -270,13 +266,13 @@ export function ChatInterface({ module, onNavigate, language }: ChatInterfacePro
            <motion.div 
              initial={{ opacity: 0 }} 
              animate={{ opacity: 1 }}
-             className="flex gap-4 p-4 mr-12"
+             className="flex gap-4 p-6 mr-12"
            >
-             <div className="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center">
-               <Loader2 className="w-4 h-4 animate-spin" />
+             <div className="w-10 h-10 bg-mckinsey-navy text-white flex items-center justify-center shadow-sm">
+               <Loader2 className="w-5 h-5 animate-spin" />
              </div>
              <div className="flex items-center">
-               <span className="text-zinc-500 text-sm">{language === 'zh' ? '思考中...' : 'Thinking...'}</span>
+               <span className="text-zinc-500 text-sm font-serif italic">{language === 'zh' ? '思考中...' : 'Thinking...'}</span>
              </div>
            </motion.div>
         )}
@@ -284,27 +280,27 @@ export function ChatInterface({ module, onNavigate, language }: ChatInterfacePro
       </div>
 
       {/* Input Area */}
-      <div className="mt-4 relative">
-        <div className="relative rounded-xl bg-zinc-900 border border-zinc-800 focus-within:border-indigo-500/50 focus-within:ring-1 focus-within:ring-indigo-500/50 transition-all shadow-lg">
+      <div className="mt-4 relative px-4 pb-6">
+        <div className="relative bg-white border border-zinc-300 focus-within:border-mckinsey-navy focus-within:ring-1 focus-within:ring-mckinsey-navy transition-all shadow-sm">
           <textarea
             ref={inputRef}
             value={input}
             onChange={adjustTextareaHeight}
             onKeyDown={handleKeyDown}
             placeholder={placeholder}
-            className="w-full bg-transparent text-zinc-100 placeholder-zinc-500 px-4 py-4 pr-12 min-h-[60px] max-h-[200px] resize-none focus:outline-none scrollbar-thin scrollbar-thumb-zinc-700"
+            className="w-full bg-transparent text-zinc-900 placeholder-zinc-400 px-6 py-5 pr-16 min-h-[70px] max-h-[200px] resize-none focus:outline-none scrollbar-thin scrollbar-thumb-zinc-300 font-serif text-lg"
             rows={1}
           />
           <button
             onClick={handleSend}
             disabled={!input.trim() || isLoading}
-            className="absolute right-3 bottom-3 p-2 text-zinc-400 hover:text-indigo-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="absolute right-4 bottom-4 p-2 text-zinc-400 hover:text-mckinsey-navy disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            <Send className="w-5 h-5" />
+            <Send className="w-6 h-6" />
           </button>
         </div>
-        <div className="text-center mt-2">
-          <p className="text-xs text-zinc-600">
+        <div className="text-center mt-3">
+          <p className="text-[10px] uppercase tracking-widest text-zinc-400">
             {language === 'zh' ? 'NEXUS 可能会犯错。请核实重要信息。' : 'NEXUS can make mistakes. Verify important information.'}
           </p>
         </div>
