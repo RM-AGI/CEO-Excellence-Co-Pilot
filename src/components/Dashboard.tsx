@@ -1,3 +1,13 @@
+import React, { useState, useEffect } from 'react';
+import { Brain, Users, Compass, ArrowRight, Sparkles } from 'lucide-react';
+import { motion } from 'motion/react';
+import { generateImage } from '../lib/nexus';
+
+interface DashboardProps {
+  onSelectModule: (module: string) => void;
+  language: 'en' | 'zh';
+}
+
 const ADVISOR_PROMPTS: Record<string, string> = {
   // Visionaries
   "steve-jobs": "Close-up portrait of Steve Jobs, black turtleneck, rimless round glasses, intense and visionary gaze, hand on chin, dramatic lighting, black background, photorealistic, 8k",
